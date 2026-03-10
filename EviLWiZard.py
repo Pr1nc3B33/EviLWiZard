@@ -149,6 +149,21 @@ class Gargoyle(Character):
         """Reduce incoming damage by half for the next 3 turns."""
         self.shielded = True
         print(f"{self.name} activates Stone Skin! Incoming damage will be reduced by half for the next 3 turns.")
+
+    def rock_smash(self, opponent):
+        """Smash the opponent with a heavy stone attack."""
+        if opponent.evading:
+            print(f"{opponent.name} evades the attack!")
+            opponent.evading = False
+            return
+        if opponent.shielded:
+            print(f"{opponent.name}'s shield blocks the attack!")
+            opponent.shielded = False
+            return
+        damage = random.randint(self.attack_power + 5, self.attack_power + 15)
+        opponent.health -= damage
+        opponent.health = max(opponent.health, 0)
+        print(f"{self.name} uses Rock Smash on {opponent.name} for {damage} damage!")
         
 class ShapeShifter(Character):
     def __init__(self, name):
@@ -165,6 +180,21 @@ class ShapeShifter(Character):
         self.health = form["health"]
         self.attack_power = form["attack_power"]
         print(f"{self.name} shapeshifts into {form['name']}! Health: {self.health}, Attack Power: {self.attack_power}")
+
+    def feral_strike(self, opponent):
+        """Use the current form's power for a stronger attack."""
+        if opponent.evading:
+            print(f"{opponent.name} evades the attack!")
+            opponent.evading = False
+            return
+        if opponent.shielded:
+            print(f"{opponent.name}'s shield blocks the attack!")
+            opponent.shielded = False
+            return
+        damage = random.randint(self.attack_power, self.attack_power + 10)
+        opponent.health -= damage
+        opponent.health = max(opponent.health, 0)
+        print(f"{self.name} uses Feral Strike on {opponent.name} for {damage} damage!")
         
                  
     
@@ -237,6 +267,28 @@ def use_special_ability(player, wizard):
         else:
             print("Invalid ability choice.")
 
+    elif isinstance(player, Gargoyle):
+        print("  1. Rock Smash (heavy damage)")
+        print("  2. Stone Skin (block next attack)")
+        choice = input("Choose an ability: ")
+        if choice == '1':
+            player.rock_smash(wizard)
+        elif choice == '2':
+            player.stone_skin()
+        else:
+            print("Invalid ability choice.")
+
+    elif isinstance(player, ShapeShifter):
+        print("  1. Shapeshift (change form stats)")
+        print("  2. Feral Strike (strong attack)")
+        choice = input("Choose an ability: ")
+        if choice == '1':
+            player.shapeshift()
+        elif choice == '2':
+            player.feral_strike(wizard)
+        else:
+            print("Invalid ability choice.")
+
 
 # Character creation
 def create_character():
@@ -245,6 +297,8 @@ def create_character():
     print("2. Mage")
     print("3. Archer")
     print("4. Paladin")
+    print("5. Gargoyle")
+    print("6. ShapeShifter")
 
     class_choice = input("Enter the number of your class choice: ")
     name = input("Enter your character's name: ")
@@ -257,6 +311,10 @@ def create_character():
         return Archer(name)
     elif class_choice == '4':
         return Paladin(name)
+    elif class_choice == '5':
+        return Gargoyle(name)
+    elif class_choice == '6':
+        return ShapeShifter(name)
     else:
         print("Invalid choice. Defaulting to Warrior.")
         return Warrior(name)
