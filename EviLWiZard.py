@@ -139,9 +139,37 @@ class Paladin(Character):
         """Block the next incoming attack."""
         self.shielded = True
         print(f"{self.name} activates Divine Shield! The next attack will be blocked.")
+#Create additional character classes with more complex mechanics.
 
+class Gargoyle(Character):
+    def __init__(self, name):
+        super().__init__(name, health=200, attack_power=10)
 
+    def stone_skin(self):
+        """Reduce incoming damage by half for the next 3 turns."""
+        self.shielded = True
+        print(f"{self.name} activates Stone Skin! Incoming damage will be reduced by half for the next 3 turns.")
+        
+class ShapeShifter(Character):
+    def __init__(self, name):
+        super().__init__(name, health=120, attack_power=20)
+
+    def shapeshift(self):
+        """Randomly change form to gain different stats for the next 3 turns."""
+        forms = [
+            {"name": "Beast Form", "health": 150, "attack_power": 25},
+            {"name": "Shadow Form", "health": 100, "attack_power": 30},
+            {"name": "Elemental Form", "health": 120, "attack_power": 20}
+        ]
+        form = random.choice(forms)
+        self.health = form["health"]
+        self.attack_power = form["attack_power"]
+        print(f"{self.name} shapeshifts into {form['name']}! Health: {self.health}, Attack Power: {self.attack_power}")
+        
+                 
+    
 # EvilWizard class
+
 class EvilWizard(Character):
     def __init__(self, name):
         super().__init__(name, health=150, attack_power=15)
@@ -153,7 +181,17 @@ class EvilWizard(Character):
         print(f"{self.name} regenerates {regen} health! Current health: {self.health}/{self.max_health}")
 
 
-# Special ability
+# Special ability summon minions
+    def summon_minions(self):
+        """Summon minions that deal random damage to the player."""
+        minion_count = random.randint(1, 3)
+        print(f"{self.name} summons {minion_count} minion(s) to attack you!")
+        for i in range(minion_count):
+            damage = random.randint(5, 15)
+            print(f"Minion {i + 1} attacks for {damage} damage!")
+            self.attack_power += damage  # Minions add to the wizard's attack power for the next turn
+
+
 def use_special_ability(player, wizard):
     if isinstance(player, Warrior):
         print("  1. Power Strike (double damage)")
